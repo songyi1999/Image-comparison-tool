@@ -7,7 +7,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import('@/components/index')
+      component: () => import('@/components/HelloWorld')
     }
   ]
 })

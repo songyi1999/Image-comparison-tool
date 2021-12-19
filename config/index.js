@@ -50,7 +50,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/soft/图片放大效果/',
+    assetsPublicPath: '/图片放大效果/',
 
     /**
      * Source Maps
