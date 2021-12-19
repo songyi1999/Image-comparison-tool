@@ -3,6 +3,7 @@
     <input id="newpic" accept="image/*" type="file" style="display: none" >
 
     <input id="hr" accept="image/*" type="file" style="display: none" >
+    <input id="multiplepic" multiple accept="image/*" type="file" style="display: none" >
 
     <div class="top">
       <div class="hr">
@@ -42,6 +43,11 @@
             size="default"
             @click="dialog.showaddform = true"
           >上传结果图</el-button
+          >
+          <el-button
+            size="info"
+            @click="uploadmultiple"
+          >多文件上传结果图</el-button
           >
         </div>
       </div>
@@ -98,6 +104,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
   </div>
 </template>
 
@@ -117,6 +124,7 @@ export default {
       },
       dialog: {
         showaddform: false
+
       },
       addform: {
         title: '',
@@ -132,9 +140,11 @@ export default {
     const app = this
     document.getElementById('hr').addEventListener('change', (e) => {
       const file = e.target.files[0]
+      console.log('e', e)
       var reader = new FileReader()
       reader.onload = function(e) {
         app.hr = e.target.result
+
         getimagesize(app.hr).then((imgsize) => {
           app.imgsize = {
             width: imgsize.width + 0,
@@ -160,6 +170,20 @@ export default {
         app.addform = { title: '', img: '' }
       }
       reader.readAsDataURL(file)
+    })
+
+    document.getElementById('multiplepic').addEventListener('change', (e) => {
+      for (let i = 0; i < e.target.files.length; i++) {
+        const file = e.target.files[i]
+
+        var reader = new FileReader()
+        reader.onload = function(e) {
+          const img = e.target.result
+
+          app.rows.push({ title: file.name, img })
+        }
+        reader.readAsDataURL(file)
+      }
     })
   },
 
@@ -190,6 +214,9 @@ export default {
     },
     uploadnewpic() {
       document.getElementById('newpic').click()
+    },
+    uploadmultiple() {
+      document.getElementById('multiplepic').click()
     }
   }
 }
