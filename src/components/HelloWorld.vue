@@ -81,11 +81,20 @@
           </div>
         </section>
         <section v-for="(p,k) in rows" :key="k" class="pre-item" title="">
-          <p>{{ p.title }}</p>
+          <p>{{ p.title }}
+            <span v-if="p.loading && !p.metrics">{{ '请稍等..' }}</span>
+          <el-button v-else type="primary" size="mini" @click="getmetrics(p)" >指标</el-button></p>
           <div :style="previewStyle3">
             <div :style="previews.div">
               <img :style="previews.img" :src="p.img||'static/pesr.png'">
+
             </div>
+          </div>
+          <div v-if="p.metrics" style="font-size:7px;">
+            <p>PI/{{ p.metrics.PI }}</p>
+            <p>PSNR/{{ p.metrics.PSNR }}</p>
+            <p>SSIM/{{ p.metrics.SSIM }}</p>
+            <p>LPIPS/{{ p.metrics.LPIPS }}</p>
           </div>
         </section>
       </div>
@@ -110,7 +119,7 @@
 
 <script>
 import { VueCropper } from 'vue-cropper'
-import { getimagesize } from './function'
+import { getimagesize, getmetrics } from './function'
 export default {
   name: 'HelloWorld',
   components: {
@@ -140,7 +149,7 @@ export default {
     const app = this
     document.getElementById('hr').addEventListener('change', (e) => {
       const file = e.target.files[0]
-      console.log('e', e)
+      // console.log('e', e)
       var reader = new FileReader()
       reader.onload = function(e) {
         app.hr = e.target.result
@@ -166,7 +175,7 @@ export default {
       reader.onload = function(e) {
         app.addform.img = e.target.result
         app.dialog.showaddform = false
-        app.rows.push(Object.assign({}, app.addform))
+        app.rows.push(Object.assign({ loading: false, metrics: '' }, app.addform))
         app.addform = { title: '', img: '' }
       }
       reader.readAsDataURL(file)
@@ -180,7 +189,7 @@ export default {
         reader.onload = function(e) {
           const img = e.target.result
 
-          app.rows.push({ title: file.name, img })
+          app.rows.push({ loading: false, metrics: '', title: file.name, img })
         }
         reader.readAsDataURL(file)
       }
@@ -188,6 +197,17 @@ export default {
   },
 
   methods: {
+    async     getmetrics(p) {
+      p.loading = true
+      const app = this
+      const srbase64 = p.img
+      const hr = app.hr
+      // console.log(srbase64, hr)
+      const result = await getmetrics(hr, srbase64)
+      // console.log(result)
+      p.metrics = result
+      return result
+    },
     startCrop() {
       this.$refs.cropper.stopCrop()
       this.$refs.cropper.clearCrop()
