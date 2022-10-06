@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <div class="addnew">
+      <div v-if="hr" class="addnew">
         <div>
           <el-button
             size="default"
@@ -188,9 +188,15 @@ export default {
         var reader = new FileReader()
         reader.onload = function(e) {
           const img = e.target.result
-
-          app.rows.push({ loading: false, metrics: '', title: file.name, img })
+          // 上传完成后直接计算指标
+          // app.rows.push({ loading: false, metrics: '', title: file.name, img })
+          app.rows.push({ loading: true, metrics: '', title: file.name, img })
+          getmetrics(img, app.hr).then((metrics) => {
+            app.rows[app.rows.length - 1].loading = false
+            app.rows[app.rows.length - 1].metrics = metrics
+          })
         }
+
         reader.readAsDataURL(file)
       }
     })
