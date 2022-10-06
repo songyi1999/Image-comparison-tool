@@ -50,7 +50,9 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../docs'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/Image-comparison-tool/',
+    // assetsPublicPath: '/Image-comparison-tool/',
+    assetsPublicPath: '/图片放大效果/',
+    
 
     /**
      * Source Maps
