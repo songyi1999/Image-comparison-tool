@@ -78,9 +78,15 @@ export async function getmetrics(imageA, imageB) {
   const sn_url = 'http://yifus.win:5000/download/' + sn + '.txt'
   await delay(5)
   let text = await getfiledata(sn_url)
+  let count = 5 // 重试次数
   while (!text) {
     await delay(60)
     text = await getfiledata(sn_url)
+    count--
+    if (count === 0) {
+      console.log('重试次数超过5次')
+      break
+    }
   }
   return text
 }

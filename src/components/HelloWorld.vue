@@ -192,12 +192,14 @@ export default {
           // app.rows.push({ loading: false, metrics: '', title: file.name, img })
           app.rows.push({ loading: true, metrics: '', title: file.name, img })
           getmetrics(img, app.hr).then((metrics) => {
-            app.rows[app.rows.length - 1].loading = false
-            app.rows[app.rows.length - 1].metrics = metrics
+            console.log('metrics: ', metrics)
+            app.rows[i].loading = false
+            app.rows[i].metrics = metrics
           })
         }
 
         reader.readAsDataURL(file)
+        // await delay(1)
       }
     })
   },
